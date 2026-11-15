@@ -1,0 +1,12 @@
+{
+    "offences": {
+        "No Helmet": 500,
+        "No Seat Belt": 1000,
+        "Over Speeding": 2000,
+        "Signal Jumping": 1000,
+        "No Parking": 500,
+        "Drunk Driving": 10000,
+        "Wrong Side Driving": 500
+    },
+    "challans": []
+}
