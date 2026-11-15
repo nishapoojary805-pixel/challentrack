@@ -1,0 +1,349 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Issue New Challan - ChallanTrack</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            color: #1e293b;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 450px;
+            max-width: 90%;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        input[type="text"],
+        select {
+            display: block;
+            width: 100%;
+            height: 45px;
+            padding: 10px;
+            background: white;
+            color: #1e293b;
+            border: 1px solid #94a3b8;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #2563eb;
+            border-color: #2563eb;
+        }
+
+        .location-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: #0f766e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .location-btn:hover {
+            background: #115e59;
+        }
+
+        #location_status {
+            font-size: 13px;
+            margin-top: 8px;
+            color: #2563eb;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            margin-top: 28px;
+            padding: 13px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #1e3a8a;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 22px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚦 ChallanTrack</h1>
+    <p>Traffic Violation and Penalty Management System</p>
+</header>
+
+<div class="container">
+
+    <h2>Issue New Challan</h2>
+
+    <form method="POST" action="/issue_challan">
+
+        <!-- Vehicle Number -->
+        <label>Vehicle Number:</label>
+
+        <input
+            type="text"
+            name="vehicle_number"
+            placeholder="Example: KA01AB1234"
+            required
+        >
+
+        <!-- Owner Name -->
+        <label>Owner Name:</label>
+
+        <input
+            type="text"
+            name="owner_name"
+            placeholder="Enter Vehicle Owner Name"
+            required
+        >
+
+        <!-- Select Offence -->
+        <label>Select Offence:</label>
+
+        <select name="offence_id" required>
+
+            <option value="">-- Select Offence --</option>
+
+            {% for offence in offences %}
+
+            <option value="{{ offence['id'] }}">
+                {{ offence['offence_name'] }}
+                - ₹{{ offence['fine_amount'] }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <!-- Location -->
+        <label>Location:</label>
+
+        <input
+            type="text"
+            name="location"
+            id="location"
+            placeholder="Enter Violation Location"
+            required
+        >
+
+        <!-- Current Location Button -->
+        <button
+            type="button"
+            class="location-btn"
+            onclick="getCurrentLocation()"
+        >
+            📍 Use Current Location
+        </button>
+
+        <p id="location_status"></p>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">
+            Generate Challan
+        </button>
+
+    </form>
+
+    <a href="/dashboard" class="back">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+<footer>
+    © 2026 ChallanTrack |
+    Smart City Traffic Management System
+</footer>
+
+<script>
+
+async function getCurrentLocation() {
+
+    const locationInput = document.getElementById("location");
+    const status = document.getElementById("location_status");
+
+    if (!navigator.geolocation) {
+        status.innerHTML = "❌ Geolocation is not supported.";
+        return;
+    }
+
+    status.innerHTML = "📍 Detecting your current location...";
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function(position) {
+
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            status.innerHTML = "Finding your nearest area...";
+
+            try {
+
+                const url =
+                    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error("Location lookup failed");
+                }
+
+                const data = await response.json();
+                const address = data.address || {};
+
+                // Find the nearest available neighbourhood
+                const area =
+                    address.neighbourhood ||
+                    address.suburb ||
+                    address.residential ||
+                    address.quarter ||
+                    address.hamlet ||
+                    address.village ||
+                    address.town ||
+                    address.city ||
+                    "";
+
+                const city =
+                    address.city ||
+                    address.town ||
+                    address.village ||
+                    address.municipality ||
+                    "";
+
+                const state = address.state || "";
+
+                // Remove duplicate names
+                const parts = [...new Set(
+                    [area, city, state].filter(Boolean)
+                )];
+
+                if (parts.length > 0) {
+
+                    locationInput.value = parts.join(", ");
+
+                    status.innerHTML =
+                        "✅ Nearby location detected successfully!";
+
+                } else {
+
+                    throw new Error("Area name not found");
+
+                }
+
+            } catch (error) {
+
+                locationInput.value =
+                    "Latitude: " + latitude.toFixed(6) +
+                    ", Longitude: " + longitude.toFixed(6);
+
+                status.innerHTML =
+                    "⚠️ Area name unavailable. Coordinates displayed instead.";
+
+            }
+
+        },
+
+        function(error) {
+
+            if (error.code === error.PERMISSION_DENIED) {
+                status.innerHTML =
+                    "❌ Please allow location permission in your browser.";
+            }
+            else if (error.code === error.TIMEOUT) {
+                status.innerHTML =
+                    "❌ Location request timed out. Try again.";
+            }
+            else {
+                status.innerHTML =
+                    "❌ Unable to detect your current location.";
+            }
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+
+    );
+
+}
+
+</script>
+
+</body>
+</html>
+```

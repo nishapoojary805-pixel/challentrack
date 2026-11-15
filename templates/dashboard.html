@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChallanTrack Dashboard</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>🚦 ChallanTrack</h1>
+        <p>Traffic Violation and Penalty Management System</p>
+    </header>
+
+    <nav>
+        <a href="/">Dashboard</a>
+        <a href="/offences">Manage Offences</a>
+        <a href="/issue_challan">Issue Challan</a>
+        <a href="/view_challans">View Challans</a>
+        <a href="/payment">Payments</a>
+        <a href="/area_report">Area Report</a>
+    </nav>
+
+    <div class="container">
+
+        <h2>Dashboard Overview</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Challans</h3>
+                <p>{{ total }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Paid Challans</h3>
+                <p>{{ paid }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Pending Challans</h3>
+                <p>{{ pending }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Fine Collection</h3>
+                <p>₹{{ collection }}</p>
+            </div>
+
+        </div>
+
+        <br><br>
+
+        <h2>Management Services</h2>
+
+        <div class="cards">
+
+            <!-- Offence Management -->
+
+            <div class="card">
+                <h3>🚦 Offence Management</h3>
+                <p>Manage traffic offences and fines.</p>
+
+                <button onclick="location.href='/offences'">
+                    Manage Offences
+                </button>
+            </div>
+
+            <!-- Issue Challan -->
+
+            <div class="card">
+                <h3>📝 Issue Challan</h3>
+                <p>Generate a new traffic challan.</p>
+
+                <button onclick="location.href='/issue_challan'">
+                    Issue Challan
+                </button>
+            </div>
+
+            <!-- View Challans -->
+
+            <div class="card">
+                <h3>📋 View Challans</h3>
+                <p>View all issued challans.</p>
+
+                <button onclick="location.href='/view_challans'">
+                    View Challans
+                </button>
+            </div>
+
+            <!-- Payment Management -->
+
+            <div class="card">
+                <h3>💳 Payment Management</h3>
+                <p>Manage pending and paid challans.</p>
+
+                <button onclick="location.href='/payment'">
+                    Manage Payments
+                </button>
+            </div>
+
+            <!-- AREA-WISE REPORT -->
+
+            <div class="card">
+                <h3>📊 Area-wise Traffic Report</h3>
+
+                <p>
+                    Analyze traffic violations in different
+                    areas and locations.
+                </p>
+
+                <button onclick="location.href='/area_report'">
+                    View Area Report
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        <p>
+            © 2026 ChallanTrack |
+            Smart City Traffic Management System
+        </p>
+    </footer>
+
+</body>
+</html>
+```

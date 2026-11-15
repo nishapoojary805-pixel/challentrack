@@ -1,0 +1,151 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Traffic Offences</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 12px;
+            width: 90%;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚦 ChallanTrack</h1>
+    <h2>Manage Traffic Offences</h2>
+</header>
+
+<div class="container">
+
+    <h2>Add New Traffic Offence</h2>
+
+    <form method="POST">
+
+        <label>Offence Name</label><br>
+
+        <input
+            type="text"
+            name="offence_name"
+            placeholder="Enter offence name"
+            required
+        >
+
+        <br>
+
+        <label>Fine Amount (₹)</label><br>
+
+        <input
+            type="number"
+            name="fine_amount"
+            placeholder="Enter fine amount"
+            min="1"
+            required
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Add Offence
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Available Traffic Offences</h2>
+
+    <table>
+
+        <tr>
+            <th>ID</th>
+            <th>Offence Name</th>
+            <th>Fine Amount</th>
+        </tr>
+
+        {% for offence in offences %}
+
+        <tr>
+            <td>{{ offence['id'] }}</td>
+            <td>{{ offence['offence_name'] }}</td>
+            <td>₹{{ offence['fine_amount'] }}</td>
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="3">No offences added yet.</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <a href="/">← Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>
+```

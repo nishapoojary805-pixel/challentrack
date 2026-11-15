@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehicle Challan Search</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header>
+    <h1>🚦 ChallanTrack</h1>
+    <p>Vehicle Challan Search</p>
+</header>
+
+<nav>
+    <a href="/">Dashboard</a>
+    <a href="/offences">Offences</a>
+    <a href="/issue_challan">Issue Challan</a>
+    <a href="/view_challans">View Challans</a>
+    <a href="/payment">Payments</a>
+</nav>
+
+<div class="container">
+
+    <h2>Search Vehicle Challans</h2>
+
+    <form method="POST">
+
+        <input
+            type="text"
+            name="vehicle_number"
+            placeholder="Enter Vehicle Number (KA01AB1234)"
+            required>
+
+        <button type="submit">Search Vehicle</button>
+
+    </form>
+
+    {% if searched %}
+
+    <h2>Search Results</h2>
+
+    <h3>Total Fine: ₹{{ total_fine }}</h3>
+    <h3>Amount Paid: ₹{{ paid_amount }}</h3>
+    <h3>Pending Amount: ₹{{ pending_amount }}</h3>
+
+    <table>
+
+        <tr>
+            <th>Challan ID</th>
+            <th>Vehicle Number</th>
+            <th>Offence</th>
+            <th>Fine</th>
+            <th>Location</th>
+            <th>Status</th>
+        </tr>
+
+        {% for challan in challans %}
+
+        <tr>
+            <td>{{ challan[0] }}</td>
+            <td>{{ challan[1] }}</td>
+            <td>{{ challan[2] }}</td>
+            <td>₹{{ challan[3] }}</td>
+            <td>{{ challan[4] }}</td>
+            <td>{{ challan[5] }}</td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    {% endif %}
+
+</div>
+
+<footer>
+    <p>© 2026 ChallanTrack</p>
+</footer>
+
+</body>
+</html>

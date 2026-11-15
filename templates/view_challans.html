@@ -1,0 +1,207 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Challans - ChallanTrack</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            background: #1e3a8a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            margin: 30px auto;
+            max-width: 1200px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        h2 {
+            color: #1e3a8a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f1f5f9;
+        }
+
+        .paid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: red;
+            font-weight: bold;
+        }
+
+        .receipt {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .receipt:hover {
+            background: #1e3a8a;
+        }
+
+        .back {
+            display: inline-block;
+            background: #1e3a8a;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .back:hover {
+            background: #2563eb;
+        }
+
+        .flash {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty {
+            padding: 20px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚦 ChallanTrack</h1>
+    <p>Traffic Violation and Penalty Management System</p>
+</header>
+
+<div class="container">
+
+    <h2>All Traffic Challans</h2>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <table>
+
+        <tr>
+            <th>Challan ID</th>
+            <th>Vehicle Number</th>
+            <th>Owner Name</th>
+            <th>Offence</th>
+            <th>Fine Amount</th>
+            <th>Location</th>
+            <th>Payment Status</th>
+            <th>PDF Receipt</th>
+        </tr>
+
+        {% for challan in challans %}
+
+        <tr>
+            <td>{{ challan['id'] }}</td>
+
+            <td>{{ challan['vehicle_number'] }}</td>
+
+            <td>{{ challan['owner_name'] }}</td>
+
+            <td>{{ challan['offence_name'] or 'Unknown' }}</td>
+
+            <td>
+                ₹{{ "%.2f"|format(challan['fine_amount']) }}
+            </td>
+
+            <td>{{ challan['location'] }}</td>
+
+            <td class="{{ 'paid' if challan['payment_status'] == 'Paid' else 'pending' }}">
+                {{ challan['payment_status'] }}
+            </td>
+
+            <td>
+                <a
+                    href="{{ url_for('challan_receipt', challan_id=challan['id']) }}"
+                    class="receipt">
+                    📄 Download PDF
+                </a>
+            </td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="8" class="empty">
+                No challans found.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <a href="/dashboard" class="back">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>
+```
